@@ -1,4 +1,8 @@
 # url_cache_db
+URL metadata caching database
+1. auto-exiry of cache
+2. Dynamic scaling
+2. DB lookup using URL
 
 #Compilation
 make
