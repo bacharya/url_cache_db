@@ -1,0 +1,4 @@
+# To generate URL entrie
+
+python3 generate_url_data.py <count>
+

@@ -1,5 +1,7 @@
 #include "url_include.h"
 
+
+
 int main(){
 
     int i, n;
@@ -7,18 +9,17 @@ int main(){
     ucentry entry = NULL;
     uint32_t ttl, response_code;
     char url[256] = {0};
+    char *lookup_url = "https://stackoverflow.com/questions/14295980/md5-reference-error/1";
     FILE *fp = NULL;
-
+    pthread_t resize_table_thread_id;
 
     printf("\nEnter the hash-table size :");
     scanf("%d", &n);
     table = url_cache_create_table(n, URL_CACHE_TBL_LIMIT);
-    printf("\nHash table contents are:\n");
-    url_cache_print_table(table);
 
     printf("\nEnter the number of elements to be added to hash-table :");
     scanf("%d", &n);
-    fp = fopen("tc.txt", "r");
+    fp = fopen("test/tc.txt", "r");
     if(!fp){
         printf("\nFailed to open file:\n");
         return 0;
@@ -28,19 +29,17 @@ int main(){
         fscanf(fp, "%s %d %d", url, &ttl, &response_code);
         entry = url_cache_get_new_entry(url, ttl, response_code);
         url_cache_insert_entry(table, entry, false);
+        table = url_cache_resize_table(table);
     }
     fclose(fp);
-    printf("\nHash table contents are:\n");
-    url_cache_print_table(table);
-    url_cache_delete_entry_at_index(table, 127, NULL);
-    url_cache_delete_entry_at_index(table, 230, NULL);
-    url_cache_delete_entry_at_index(table, 0, NULL);
-    //url_cache_print_table_stats(table);
-#if 0
+
+
+    i = 0;
+    printf("Lookup-URL :%s\n", url);
     for(;;){
+        url_cache_lookup(table, lookup_url);
         url_cache_cleanup(table);
         url_cache_print_table_stats(table);
         sleep(1);
     };
-#endif
 }

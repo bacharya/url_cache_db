@@ -1,7 +1,8 @@
 #include "url_include.h"
 #pragma once
 
-#define URL_CACHE_TBL_LIMIT         100000
+#define URL_CACHE_TBL_LIMIT         1000000
+#define URL_CACHE_TBL_SIZE_THRESH   90
 #define URL_CACHE_TBL_DEFAULT_SIZE  1024
 #define URL_CACHE_TBL_SCALE_FACTOR  2
 #define URL_CACHE_TBL_GC_WALK_LIMIT 2000
@@ -45,9 +46,12 @@ typedef struct url_cache_table_ {
     uint32_t limit;
     uint32_t size;
     uint32_t total_count;
+    uint32_t lookup_success_count;
+    uint32_t lookup_failure_count;
     uctnode  table;
     uc_vector gc_vector;
     uint32_t gc_last_index;
+    uint32_t gc_count;
     uint32_t gc_cleanup_count;
 } url_cache_table_t;
 
@@ -58,6 +62,9 @@ url_cache_hash(uint8_t *key, uint32_t len, uint32_t size);
 
 uctable
 url_cache_create_table(uint32_t size, uint32_t limit);
+
+uctable
+url_cache_resize_table(uctable table);
 
 ucentry
 url_cache_get_new_entry(char *url, uint32_t ttl, uint32_t response_code);
@@ -87,3 +94,5 @@ void url_cache_table_unlock();
 uint32_t url_cache_cleanup(uctable table);
 
 void url_cache_print_table_stats(uctable table);
+
+void url_cache_print_gc_vector(uctable table);

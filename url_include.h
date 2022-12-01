@@ -10,4 +10,5 @@
 #include "openssl/md5.h"
 #include "url_cache.h"
 #include "unistd.h"
+#include "pthread.h"
 #endif
