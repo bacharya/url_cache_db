@@ -9,9 +9,9 @@ int main(){
     ucentry entry = NULL;
     uint32_t ttl, response_code;
     char url[256] = {0};
-    char *lookup_url = "https://stackoverflow.com/questions/14295980/md5-reference-error/1";
+    char *lookup_url = "https://en.wikipedia.org/wiki/Main_Page/1";
     FILE *fp = NULL;
-    pthread_t resize_table_thread_id;
+    time_t start, end;
 
     printf("\nEnter the hash-table size :");
     scanf("%d", &n);
@@ -24,6 +24,7 @@ int main(){
         printf("\nFailed to open file:\n");
         return 0;
     }
+    start = time(NULL);
     printf("\nEnter %d elements(url, ttl, response_code):\n", n);
     for(i=0;i<n;i++){
         fscanf(fp, "%s %d %d", url, &ttl, &response_code);
@@ -31,6 +32,8 @@ int main(){
         url_cache_insert_entry(table, entry, false);
         table = url_cache_resize_table(table);
     }
+    end = time(NULL);
+    printf("\nElapsed time to scale DB :%lds\n",end-start);
     fclose(fp);
 
 
